@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Peter on 3/22/2016.
+ * Edited by Ashley on 3/22/2016 !!!! TESTING ONE TWO THREE PLZ
  */
 public class DataArray {
     private ArrayList<Double> rawData;
