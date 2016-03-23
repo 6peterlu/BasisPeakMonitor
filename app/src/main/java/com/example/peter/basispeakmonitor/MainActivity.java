@@ -25,6 +25,31 @@ public class MainActivity extends AppCompatActivity {
             s.close();
         }
 
-        test.setText(data);
+        String[] heartrate = getData("heartrate", data);
+        String[] calories = getData("calories", data);
+        String[] steps = getData("steps", data);
+        String[] gsr = getData("gsr", data);
+        String[] skin_temp = getData("skin_temp", data);
+        
+    }
+
+    //Helper methods
+
+    /**
+     * Parses string into a string array.
+     * @return
+     */
+    private static String[] getData(String metric, String raw){
+        int index = raw.indexOf(metric);
+        if(index==-1){
+            System.out.println("Invalid metric.");
+            return null;
+        } else {
+            int startBracket = raw.indexOf("[", index);
+            int endBracket = raw.indexOf("]", index);
+            String numbers = raw.substring(startBracket+1,endBracket);
+            String[] parsed = numbers.split(",");
+            return parsed;
+        }
     }
 }
