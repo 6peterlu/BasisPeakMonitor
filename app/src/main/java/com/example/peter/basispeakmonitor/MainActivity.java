@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
         } finally {
             s.close();
         }
+
         test.setText(data);
     }
 }
