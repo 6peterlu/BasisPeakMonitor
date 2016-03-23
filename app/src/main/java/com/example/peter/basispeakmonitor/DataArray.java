@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class DataArray {
     private ArrayList<Integer> rawData;
     private ArrayList<Integer> truncatedData;
-
+    //Hi ashley
 
     public DataArray(ArrayList<String> input){
         
