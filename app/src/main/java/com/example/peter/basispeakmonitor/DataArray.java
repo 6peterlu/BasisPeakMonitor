@@ -39,9 +39,9 @@ public class DataArray {
         return null;
     }
 
-    public double getLastValue(ArrayList<Double> input){
-        if(!input.isEmpty()){
-            return input.get(input.size() -1 );
+    public double getLastValue(){
+        if(!truncatedData.isEmpty()){
+            return truncatedData.get(truncatedData.size() -1);
         }
         return -1;
     }
