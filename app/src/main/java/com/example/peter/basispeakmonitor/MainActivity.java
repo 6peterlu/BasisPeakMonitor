@@ -13,6 +13,8 @@ import org.jsoup.nodes.Document;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
@@ -101,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
     //ASync stuff below this line-----------------------------------------
     private class DownloadFilesTask extends AsyncTask<URL, Integer, Document> {
         public Document doc;
+
         protected Document doInBackground(URL... urls) {
             int count = urls.length;
             long totalSize = 0;
@@ -114,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
                 Map<String, String> loginCookies = res.cookies();
 
 //Here you parse the page that you want. Put the url that you see when you have logged in
-                doc = Jsoup.connect("https://app.mybasis.com/api/v1/metricsday/me?day=2016-03-23&padding=10800&heartrate=true&steps=true&calories=true&gsr=true&skin_temp=true&bodystates=true")
+                doc = Jsoup.connect("https://app.mybasis.com/api/v1/metricsday/me?day="+getDate()+"&padding=10800&heartrate=true&steps=true&calories=true&gsr=true&skin_temp=true&bodystates=true")
                         .cookies(loginCookies)
                         .ignoreContentType(true)
                         .get();
@@ -131,11 +134,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Anything you want to update every time data is pulled, add it in this method.
     private void asyncCompleted(String s){
         TextView test = (TextView)findViewById(R.id.raw_data);
         lastRecievedData = s;
         test.setText(s);
     }
 
+    private String getDate(){
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String formattedDate = df.format(c.getTime());
+        return formattedDate.substring(0,10);
+    }
 
 }
