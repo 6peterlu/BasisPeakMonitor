@@ -1,9 +1,12 @@
 package com.example.peter.basispeakmonitor;
 
+import android.app.Activity;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
+import android.os.Handler;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import org.jsoup.Connection;
@@ -16,28 +19,56 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
 
 
-public class MainActivity extends AppCompatActivity {
-    private String lastRecievedData;
-    private String[] heartrate;
-    private String[] calories;
-    private String[] steps;
-    private String[] skin_temp;
-    private String[] gsr;
+public class MainActivity extends Activity {
+    //Data variables
+    private DataArray heartrate;
+    private DataArray calories;
+    private DataArray steps;
+    private DataArray skin_temp;
+    private DataArray gsr;
+    private String[] displayedData;
+    private ArrayAdapter<String> adapter;
+    private ListView mainList;
+
+    //Timers: I hope you understand this code cause I don't
+    public Handler handler = new Handler();
+    private Runnable mRunnable = new Runnable() {
+
+        @Override
+        public void run() {
+            refresh();
+            handler.postDelayed(mRunnable, 10000);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initializeDisplayedData();
 
-        new DownloadFilesTask().execute();
-        TextView text = (TextView) findViewById(R.id.raw_data);
-        text.setText("Loading data...");
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, displayedData);
+        mainList.setAdapter(adapter);
 
+        mRunnable.run();
     }
 
+
+    private void initializeDisplayedData(){
+        mainList = (ListView)findViewById(R.id.hubListView);
+        displayedData = new String[6];
+        displayedData[0] = "last recorded heartrate: none";
+        displayedData[1] = "last recorded calories: none";
+        displayedData[2] = "last recorded steps: none";
+        displayedData[3] = "last recorded skin temp: none";
+        displayedData[4] = "last recorded gsr: none";
+        displayedData[5] = "alerts: none";
+    }
     //Helper methods
 
     /**
@@ -82,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     //ASync stuff below this line-----------------------------------------
+
     private class DownloadFilesTask extends AsyncTask<URL, Integer, Document> {
         public Document doc;
 
@@ -115,19 +147,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Anything you want to update every time data is pulled, add it in this method
-    private void asyncCompleted(String s){
-        lastRecievedData = s;
-        updateAll();
+    private void asyncCompleted(String received){
+        heartrate = new DataArray(getData("heartrate", received));
+        calories = new DataArray(getData("calories", received));
+        steps = new DataArray(getData("steps", received));
+        skin_temp = new DataArray(getData("skin_temp", received));
+        gsr = new DataArray(getData("gsr", received));
+
+        displayedData[0] = "last recorded heartrate: "+heartrate.getLastValue();
+        displayedData[1] = "last recorded calories: "+calories.getLastValue();
+        displayedData[2] = "last recorded steps: "+steps.getLastValue();
+        displayedData[3] = "last recorded skin temp: "+skin_temp.getLastValue();
+        displayedData[4] = "last recorded gsr: "+gsr.getLastValue();
+        displayedData[5] = "alerts: none";
+        adapter.notifyDataSetChanged();
+
     }
 
-    private void updateAll(){
-        TextView text = (TextView) findViewById(R.id.raw_data);
-        text.setText(lastRecievedData);
-        heartrate = getData("heartrate", lastRecievedData);
-        calories = getData("calories", lastRecievedData);
-        steps = getData("steps", lastRecievedData);
-        skin_temp = getData("skin_temp", lastRecievedData);
-        gsr = getData("gsr", lastRecievedData);
+    //This method repulls data from basis's website.
+    private void refresh(){
+        new DownloadFilesTask().execute();
+        displayedData[5] = "alerts: loading data!";
+        adapter.notifyDataSetChanged();
     }
 
     private String getDate(){

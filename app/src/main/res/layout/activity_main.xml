@@ -9,9 +9,9 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.peter.basispeakmonitor.MainActivity">
 
-    <TextView
+    <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="&lt;placeholder>"
-        android:id="@+id/raw_data" />
+        android:id="@+id/hubListView"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
