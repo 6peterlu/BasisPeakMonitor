@@ -18,7 +18,7 @@ import java.util.concurrent.ExecutionException;
 
 
 public class MainActivity extends AppCompatActivity {
-
+    private String lastRecievedData;
 
 
     @Override
@@ -26,20 +26,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DownloadFilesTask d = new DownloadFilesTask();
-        Document received = null;
-        try {
-            received = d.execute().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
+        new DownloadFilesTask().execute();
 
         //**************TESTING OVER THIS LINE
 
-        TextView test = (TextView)findViewById(R.id.raw_data);
-        test.setText(received.toString());
+
 //        Scanner s = new Scanner(getResources().openRawResource(R.raw.basis));
 //        String data="";
 //        try {
@@ -134,11 +125,17 @@ public class MainActivity extends AppCompatActivity {
             return doc;
         }
 
-        protected void onPostExecute(Long result) {
-            System.out.println("Doc status: "+doc.toString());
+        protected void onPostExecute(Document d) {
+            System.out.println("What's up buttercup");
+            asyncCompleted(doc.toString());
         }
     }
 
+    private void asyncCompleted(String s){
+        TextView test = (TextView)findViewById(R.id.raw_data);
+        lastRecievedData = s;
+        test.setText(s);
+    }
 
 
 }
