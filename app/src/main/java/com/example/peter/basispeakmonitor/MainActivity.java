@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //Anything you want to update every time data is pulled, add it in this method.
+    //Anything you want to update every time data is pulled, add it in this method
     private void asyncCompleted(String s){
         lastRecievedData = s;
         updateAll();
