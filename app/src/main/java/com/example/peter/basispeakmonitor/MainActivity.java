@@ -21,7 +21,11 @@ import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
     private String lastRecievedData;
-
+    private String[] heartrate;
+    private String[] calories;
+    private String[] steps;
+    private String[] skin_temp;
+    private String[] gsr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,31 +33,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         new DownloadFilesTask().execute();
-
-        //**************TESTING OVER THIS LINE
-
-
-//        Scanner s = new Scanner(getResources().openRawResource(R.raw.basis));
-//        String data="";
-//        try {
-//            while (s.hasNext()) {
-//                data = data+s.next();
-//            }
-//        } finally {
-//            s.close();
-//        }
-//
-//        String[] heartrate = getData("heartrate", data);
-//        String[] calories = getData("calories", data);
-//        String[] steps = getData("steps", data);
-//        String[] gsr = getData("gsr", data);
-//        String[] skin_temp = getData("skin_temp", data);
-//
-//        String gsrString = "";
-//        for(String sample: gsr){
-//            gsrString = gsrString+sample;
-//        }
-//        test.setText(gsrString);
+        TextView text = (TextView) findViewById(R.id.raw_data);
+        text.setText("Loading data...");
 
     }
 
@@ -105,8 +86,7 @@ public class MainActivity extends AppCompatActivity {
         public Document doc;
 
         protected Document doInBackground(URL... urls) {
-            int count = urls.length;
-            long totalSize = 0;
+
             try {
                 Connection.Response res = Jsoup.connect("https://app.mybasis.com/login")
                         .data("username", "peterlu6@stanford.edu")
@@ -130,15 +110,24 @@ public class MainActivity extends AppCompatActivity {
 
         protected void onPostExecute(Document d) {
             System.out.println("What's up buttercup");
-            asyncCompleted(doc.toString());
+            asyncCompleted(doc.text());
         }
     }
 
     //Anything you want to update every time data is pulled, add it in this method.
     private void asyncCompleted(String s){
-        TextView test = (TextView)findViewById(R.id.raw_data);
         lastRecievedData = s;
-        test.setText(s);
+        updateAll();
+    }
+
+    private void updateAll(){
+        TextView text = (TextView) findViewById(R.id.raw_data);
+        text.setText(lastRecievedData);
+        heartrate = getData("heartrate", lastRecievedData);
+        calories = getData("calories", lastRecievedData);
+        steps = getData("steps", lastRecievedData);
+        skin_temp = getData("skin_temp", lastRecievedData);
+        gsr = getData("gsr", lastRecievedData);
     }
 
     private String getDate(){
@@ -147,5 +136,4 @@ public class MainActivity extends AppCompatActivity {
         String formattedDate = df.format(c.getTime());
         return formattedDate.substring(0,10);
     }
-
 }
