@@ -1,13 +1,17 @@
 package com.example.peter.basispeakmonitor;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.google.gson.Gson;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -46,10 +50,14 @@ public class MainActivity extends Activity {
         }
     };
 
+    //Saved states
+    private SharedPreferences mPrefs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         initializeDisplayedData();
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, displayedData);
@@ -59,15 +67,73 @@ public class MainActivity extends Activity {
     }
 
 
+    //Saving data
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences.Editor prefsEditor = mPrefs.edit();
+        Gson gson = new Gson();
+
+        String hr = gson.toJson(heartrate);
+        prefsEditor.putString("heartrate", hr);
+
+        String st = gson.toJson(steps);
+        prefsEditor.putString("steps", st);
+
+        String sk = gson.toJson(skin_temp);
+        prefsEditor.putString("skin_temp", sk);
+
+        String ca = gson.toJson(calories);
+        prefsEditor.putString("calories", ca);
+
+        String gs = gson.toJson(gsr);
+        prefsEditor.putString("gsr", gs);
+
+        prefsEditor.apply();
+    }
+
+
     private void initializeDisplayedData(){
         mainList = (ListView)findViewById(R.id.hubListView);
+        Gson gson = new Gson();
+        mPrefs = getPreferences(MODE_PRIVATE);
         displayedData = new String[6];
-        displayedData[0] = "last recorded heartrate: none";
-        displayedData[1] = "last recorded calories: none";
-        displayedData[2] = "last recorded steps: none";
-        displayedData[3] = "last recorded skin temp: none";
-        displayedData[4] = "last recorded gsr: none";
-        displayedData[5] = "alerts: none";
+        if(mPrefs.contains("heartrate")) {
+
+            System.out.println("Shared preferences found");
+
+            String hr = mPrefs.getString("heartrate", "");
+            System.out.println("hr is: "+hr);
+            heartrate = gson.fromJson(hr, DataArray.class);
+
+            String sk = mPrefs.getString("skin_temp", "");
+            skin_temp = gson.fromJson(sk, DataArray.class);
+
+            String gs = mPrefs.getString("gsr", "");
+            gsr = gson.fromJson(gs, DataArray.class);
+
+            String ca = mPrefs.getString("calories", "");
+            calories = gson.fromJson(ca, DataArray.class);
+
+            String st = mPrefs.getString("steps", "");
+            steps = gson.fromJson(st, DataArray.class);
+
+            displayedData[0] = "last recorded heartrate: "+heartrate.getLastValue();
+            displayedData[1] = "last recorded calories: "+calories.getLastValue();
+            displayedData[2] = "last recorded steps: "+steps.getLastValue();
+            displayedData[3] = "last recorded skin temp: "+skin_temp.getLastValue();
+            displayedData[4] = "last recorded gsr: "+gsr.getLastValue();
+            displayedData[5] = "alerts: none";
+        } else {
+            System.out.println("Shared Preferences not found");
+            displayedData = new String[6];
+            displayedData[0] = "last recorded heartrate: none";
+            displayedData[1] = "last recorded calories: none";
+            displayedData[2] = "last recorded steps: none";
+            displayedData[3] = "last recorded skin temp: none";
+            displayedData[4] = "last recorded gsr: none";
+            displayedData[5] = "alerts: none";
+        }
     }
     //Helper methods
 
