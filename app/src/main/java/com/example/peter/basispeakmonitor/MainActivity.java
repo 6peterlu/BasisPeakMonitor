@@ -1,12 +1,15 @@
 package com.example.peter.basispeakmonitor;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -28,7 +31,7 @@ import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
     //Data variables
     private DataArray heartrate;
     private DataArray calories;
@@ -61,10 +64,12 @@ public class MainActivity extends Activity {
         initializeDisplayedData();
 
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, displayedData);
+        mainList.setOnItemClickListener(this);
         mainList.setAdapter(adapter);
 
         mRunnable.run();
     }
+
 
 
     //Saving data
@@ -177,6 +182,37 @@ public class MainActivity extends Activity {
         return output;
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Intent intent = new Intent(this, GraphActivity.class);
+        //For now, I just pass the arraylist from the data array directly but it may
+        //help a lot in the future to figure out how implement the DataArray class as
+        //Parcelable, so we can straight up pass the class.
+        //I was too tired at the time and the array list by itself is enough [FOR NOW].
+        switch(position){
+            case(0): intent.putExtra("selected", "heartrate");
+                System.out.println("In Main Activity: hr " + heartrate.getTruncData());
+                intent.putExtra("data", heartrate.getTruncData()); break;
+            case(1): intent.putExtra("selected", "calories");
+                System.out.println("In Main Activity: cal " + calories.getTruncData());
+                intent.putExtra("data", calories.getTruncData()); break;
+            case(2): intent.putExtra("selected", "steps");
+                System.out.println("In Main Activity: steps " + steps.getTruncData());
+                intent.putExtra("data", steps.getTruncData()); break;
+            case(3): intent.putExtra("selected", "skin temp");
+                System.out.println("In Main Activity: skin temp " + skin_temp.getTruncData());
+                intent.putExtra("data", skin_temp.getTruncData()); break;
+            case(4): intent.putExtra("selected", "gsr");
+                System.out.println("In Main Activity: gsr " + gsr.getTruncData());
+                intent.putExtra("data", gsr.getTruncData()); break;
+            case(5): return;
+
+            //also god bless intents overwrite. if they didn't then lord...
+        }
+
+        startActivity(intent);
+    }
+
 
     //ASync stuff below this line-----------------------------------------
 
@@ -227,7 +263,6 @@ public class MainActivity extends Activity {
         displayedData[4] = "last recorded gsr: "+gsr.getLastValue();
         displayedData[5] = "alerts: none";
         adapter.notifyDataSetChanged();
-
     }
 
     //This method repulls data from basis's website.
