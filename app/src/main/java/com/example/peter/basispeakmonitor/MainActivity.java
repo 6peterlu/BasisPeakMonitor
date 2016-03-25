@@ -49,7 +49,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         @Override
         public void run() {
             refresh();
-            handler.postDelayed(mRunnable, 10000);
+            handler.postDelayed(mRunnable, 100000);
         }
     };
 
@@ -108,7 +108,6 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
             System.out.println("Shared preferences found");
 
             String hr = mPrefs.getString("heartrate", "");
-            System.out.println("hr is: "+hr);
             heartrate = gson.fromJson(hr, DataArray.class);
 
             String sk = mPrefs.getString("skin_temp", "");
@@ -189,22 +188,21 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         //help a lot in the future to figure out how implement the DataArray class as
         //Parcelable, so we can straight up pass the class.
         //I was too tired at the time and the array list by itself is enough [FOR NOW].
+
+        Gson gson = new Gson();//This helps package custom classes
+
         switch(position){
             case(0): intent.putExtra("selected", "heartrate");
-                System.out.println("In Main Activity: hr " + heartrate.getTruncData());
-                intent.putExtra("data", heartrate.getTruncData()); break;
+                System.out.println("clicked item 0");
+                intent.putExtra("data", gson.toJson(heartrate)); break;
             case(1): intent.putExtra("selected", "calories");
-                System.out.println("In Main Activity: cal " + calories.getTruncData());
-                intent.putExtra("data", calories.getTruncData()); break;
+                intent.putExtra("data", gson.toJson(calories)); break;
             case(2): intent.putExtra("selected", "steps");
-                System.out.println("In Main Activity: steps " + steps.getTruncData());
-                intent.putExtra("data", steps.getTruncData()); break;
+                intent.putExtra("data", gson.toJson(steps)); break;
             case(3): intent.putExtra("selected", "skin temp");
-                System.out.println("In Main Activity: skin temp " + skin_temp.getTruncData());
-                intent.putExtra("data", skin_temp.getTruncData()); break;
+                intent.putExtra("data", gson.toJson(skin_temp)); break;
             case(4): intent.putExtra("selected", "gsr");
-                System.out.println("In Main Activity: gsr " + gsr.getTruncData());
-                intent.putExtra("data", gsr.getTruncData()); break;
+                intent.putExtra("data", gson.toJson(gsr)); break;
             case(5): return;
 
             //also god bless intents overwrite. if they didn't then lord...
