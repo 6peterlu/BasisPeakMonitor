@@ -30,6 +30,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+
 
 public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
     //Data variables
@@ -60,6 +62,12 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                        .setDefaultFontPath("fonts/ostrich-regular.ttf")
+                        .setFontAttrId(R.attr.fontPath)
+                        .build()
+        );
 
         initializeDisplayedData();
 
@@ -192,16 +200,16 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         Gson gson = new Gson();//This helps package custom classes
 
         switch(position){
-            case(0): intent.putExtra("selected", "heartrate");
+            case(0): intent.putExtra("selected", "Heart Rate");
                 System.out.println("clicked item 0");
                 intent.putExtra("data", gson.toJson(heartrate)); break;
-            case(1): intent.putExtra("selected", "calories");
+            case(1): intent.putExtra("selected", "Calories");
                 intent.putExtra("data", gson.toJson(calories)); break;
-            case(2): intent.putExtra("selected", "steps");
+            case(2): intent.putExtra("selected", "Steps");
                 intent.putExtra("data", gson.toJson(steps)); break;
-            case(3): intent.putExtra("selected", "skin temp");
+            case(3): intent.putExtra("selected", "Skin Temp");
                 intent.putExtra("data", gson.toJson(skin_temp)); break;
-            case(4): intent.putExtra("selected", "gsr");
+            case(4): intent.putExtra("selected", "Galvanic Skin Response");
                 intent.putExtra("data", gson.toJson(gsr)); break;
             case(5): return;
 

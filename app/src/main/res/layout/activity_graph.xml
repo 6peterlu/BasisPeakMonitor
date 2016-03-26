@@ -8,5 +8,14 @@
     xmlns:chart="http://schemas.android.com/apk/res-auto"
     android:id="@+id/linechart"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+    android:layout_height="600px"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/chartTitle"
+        android:layout_below="@+id/linechart"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

@@ -30,4 +30,5 @@ dependencies {
     compile 'org.jsoup:jsoup:1.8.1'
     compile 'com.google.code.gson:gson:2.6.2'
     compile 'com.diogobernardino:williamchart:2.2'
+    compile 'uk.co.chrisjenx:calligraphy:2.1.0'
 }
