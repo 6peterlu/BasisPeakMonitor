@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="16dp"
-    android:paddingRight="16dp" >
+    android:paddingRight="16dp"
+    android:orientation="vertical">
 <com.db.chart.view.LineChartView
     xmlns:chart="http://schemas.android.com/apk/res-auto"
     android:id="@+id/linechart"
+    android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:layout_height="600px"/>
+    android:layout_weight="1"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -16,6 +18,5 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Large Text"
         android:id="@+id/chartTitle"
-        android:layout_below="@+id/linechart"
-        android:layout_centerHorizontal="true" />
-</RelativeLayout>
+        android:layout_gravity="center" />
+</LinearLayout>
