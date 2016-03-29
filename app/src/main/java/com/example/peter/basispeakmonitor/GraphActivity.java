@@ -1,25 +1,18 @@
 package com.example.peter.basispeakmonitor;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.os.Bundle;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.db.chart.model.LineSet;
 import com.db.chart.view.ChartView;
 import com.db.chart.view.LineChartView;
 import com.db.chart.view.animation.Animation;
-import com.db.chart.view.animation.easing.LinearEase;
 import com.db.chart.view.animation.easing.QuadEase;
 import com.google.gson.Gson;
 
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class GraphActivity extends Activity {

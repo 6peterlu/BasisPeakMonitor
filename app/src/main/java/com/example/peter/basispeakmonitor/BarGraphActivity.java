@@ -1,21 +1,19 @@
 package com.example.peter.basispeakmonitor;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
 import com.db.chart.model.BarSet;
-import com.db.chart.model.LineSet;
 import com.db.chart.view.BarChartView;
 import com.db.chart.view.ChartView;
-import com.db.chart.view.LineChartView;
 import com.db.chart.view.animation.Animation;
 import com.db.chart.view.animation.easing.QuadEase;
 import com.google.gson.Gson;
 
-public class BarGraphActivity extends AppCompatActivity {
+public class BarGraphActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +35,8 @@ public class BarGraphActivity extends AppCompatActivity {
         float[] data = values.getSparseData();
 
         String[] labels = values.getLabels();
-//        LineSet dataset = new LineSet();
         BarSet dataset = new BarSet(labels, data);
-//
-//        for (int i = 0; i < data.length; i++){
-//            if(data[i] != -1){
-//                dataset.addPoint(labels[i], data[i]);
-//            }
-//        }
+
 
         //Cosmetics below
 

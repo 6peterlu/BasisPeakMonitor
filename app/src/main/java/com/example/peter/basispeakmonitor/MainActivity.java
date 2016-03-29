@@ -6,13 +6,10 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -20,31 +17,21 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.ExecutionException;
-
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 
 public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
     //Data variables
-    private DataArray heartrate;
-    private DataArray calories;
-    private DataArray steps;
-    private DataArray skin_temp;
-    private DataArray gsr;
-    private String[] displayedData;
+    private ArrayList<Patient> patientList;
     private ArrayAdapter<String> adapter;
     private ListView mainList;
 
-    //Timers: I hope you understand this code cause I don't
+    //enables automatic refreshing
     public Handler handler = new Handler();
     private Runnable mRunnable = new Runnable() {
 
@@ -58,16 +45,12 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     //Saved states
     private SharedPreferences mPrefs;
 
+
+    //MAIN ACTIVITY NEEDS UPDATING FROM THIS POINT ONWARD********************
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                        .setDefaultFontPath("fonts/ostrich-regular.ttf")
-                        .setFontAttrId(R.attr.fontPath)
-                        .build()
-        );
 
         initializeDisplayedData();
 
