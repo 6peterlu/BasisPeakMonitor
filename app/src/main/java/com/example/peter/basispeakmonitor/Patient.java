@@ -32,7 +32,7 @@ public class Patient {
         name = patientName;
         Gson gson = new Gson();
 
-        if(mPrefs.contains("packet")) {
+        if(mPrefs!=null) {
             System.out.println("Shared preferences found");
             data = gson.fromJson(mPrefs.getString("packet",""), DataPacket.class);
 

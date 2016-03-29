@@ -22,7 +22,8 @@
         </activity>
         <activity android:name=".GraphActivity" />
         <activity android:name=".BarGraphActivity" />
-        <activity android:name=".PatientActivity"></activity>
+        <activity android:name=".PatientActivity" />
+        <activity android:name=".AddPatient"></activity>
     </application>
 
 </manifest>
