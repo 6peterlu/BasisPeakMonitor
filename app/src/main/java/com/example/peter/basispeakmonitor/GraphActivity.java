@@ -44,14 +44,14 @@ public class GraphActivity extends Activity {
         float[] data = values.getSparseData();
 
         String[] labels = values.getLabels();
-        LineSet dataset = new LineSet();
-        //LineSet dataset = new LineSet(labels, data);
-
-        for (int i = 0; i < data.length; i++){
-            if(data[i] != -1){
-                dataset.addPoint(labels[i], data[i]);
-            }
-        }
+//        LineSet dataset = new LineSet();
+        LineSet dataset = new LineSet(labels, data);
+//
+//        for (int i = 0; i < data.length; i++){
+//            if(data[i] != -1){
+//                dataset.addPoint(labels[i], data[i]);
+//            }
+//        }
 
         //Cosmetics below
 

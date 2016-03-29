@@ -1,18 +1,25 @@
 package com.example.peter.basispeakmonitor;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -63,6 +70,17 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (!isInternetConnected(getApplicationContext())) {
+
+            Toast.makeText(getApplicationContext(), "No Internet Connected!", Toast.LENGTH_LONG).show();
+            TextView tx = new TextView(this);
+            tx.setText("Please close the app, connect to the internet, and then start the app again");
+            RelativeLayout main = (RelativeLayout) findViewById(R.id.main);
+            main.addView(tx);
+            return;
+        } else {
+            Toast.makeText(getApplicationContext(), "Internet Connected!", Toast.LENGTH_SHORT).show();
+        }
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                         .setDefaultFontPath("fonts/ostrich-regular.ttf")
                         .setFontAttrId(R.attr.fontPath)
@@ -78,7 +96,12 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         mRunnable.run();
     }
 
+    public static boolean isInternetConnected(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    }
 
     //Saving data
     @Override
@@ -104,7 +127,6 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
         prefsEditor.apply();
     }
-
 
     private void initializeDisplayedData(){
         mainList = (ListView)findViewById(R.id.hubListView);
