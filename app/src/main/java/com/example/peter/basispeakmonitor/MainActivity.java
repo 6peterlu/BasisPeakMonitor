@@ -6,10 +6,13 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 
@@ -17,21 +20,31 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.ExecutionException;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 
 public class MainActivity extends Activity implements AdapterView.OnItemClickListener {
     //Data variables
-    private ArrayList<Patient> patientList;
+    private DataArray heartrate;
+    private DataArray calories;
+    private DataArray steps;
+    private DataArray skin_temp;
+    private DataArray gsr;
+    private String[] displayedData;
     private ArrayAdapter<String> adapter;
     private ListView mainList;
 
-    //enables automatic refreshing
+    //Timers: I hope you understand this code cause I don't
     public Handler handler = new Handler();
     private Runnable mRunnable = new Runnable() {
 
@@ -45,12 +58,16 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     //Saved states
     private SharedPreferences mPrefs;
 
-
-    //MAIN ACTIVITY NEEDS UPDATING FROM THIS POINT ONWARD********************
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                        .setDefaultFontPath("fonts/ostrich-regular.ttf")
+                        .setFontAttrId(R.attr.fontPath)
+                        .build()
+        );
 
         initializeDisplayedData();
 
@@ -174,34 +191,32 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Intent lineIntent = new Intent(this, GraphActivity.class);
-        Intent barIntent = new Intent(this, BarGraphActivity.class);
+        Intent intent = new Intent(this, GraphActivity.class);
+        //For now, I just pass the arraylist from the data array directly but it may
+        //help a lot in the future to figure out how implement the DataArray class as
+        //Parcelable, so we can straight up pass the class.
+        //I was too tired at the time and the array list by itself is enough [FOR NOW].
 
         Gson gson = new Gson();//This helps package custom classes
 
         switch(position){
-            case(0): lineIntent.putExtra("selected", "Heart Rate");
+            case(0): intent.putExtra("selected", "Heart Rate");
                 System.out.println("clicked item 0");
-                lineIntent.putExtra("data", gson.toJson(heartrate));
-                startActivity(lineIntent); break;
-            case(1): barIntent.putExtra("selected", "Calories");
-                barIntent.putExtra("data", gson.toJson(calories));
-                startActivity(barIntent); break;
-            case(2): barIntent.putExtra("selected", "Steps");
-                barIntent.putExtra("data", gson.toJson(steps));
-                startActivity(barIntent); break;
-            case(3): lineIntent.putExtra("selected", "Skin Temp");
-                lineIntent.putExtra("data", gson.toJson(skin_temp));
-                startActivity(lineIntent); break;
-            case(4): lineIntent.putExtra("selected", "Galvanic Skin Response");
-                lineIntent.putExtra("data", gson.toJson(gsr));
-                startActivity(lineIntent);break;
+                intent.putExtra("data", gson.toJson(heartrate)); break;
+            case(1): intent.putExtra("selected", "Calories");
+                intent.putExtra("data", gson.toJson(calories)); break;
+            case(2): intent.putExtra("selected", "Steps");
+                intent.putExtra("data", gson.toJson(steps)); break;
+            case(3): intent.putExtra("selected", "Skin Temp");
+                intent.putExtra("data", gson.toJson(skin_temp)); break;
+            case(4): intent.putExtra("selected", "Galvanic Skin Response");
+                intent.putExtra("data", gson.toJson(gsr)); break;
             case(5): return;
 
             //also god bless intents overwrite. if they didn't then lord...
         }
 
-
+        startActivity(intent);
     }
 
 
