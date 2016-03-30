@@ -48,6 +48,10 @@ public class Patient {
         return name;
     }
 
+    public DataPacket getDataPacket(){
+        return data;
+    }
+
     public DataPacket refreshData(){
         try {
             data = new DataPacket(new DownloadFilesTask().execute().get());

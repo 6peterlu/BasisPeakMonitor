@@ -3,6 +3,7 @@ package com.example.peter.basispeakmonitor;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.EditText;
 
 import com.google.gson.Gson;
@@ -15,7 +16,7 @@ public class AddPatient extends Activity {
         setContentView(R.layout.activity_add_patient);
     }
 
-    public void submitCredentials(){
+    public void submitCredentials(View view){
         //Need to add password and user checking here, Ashley, you know how to do this
 
         Intent intent = new Intent(this, MainActivity.class);

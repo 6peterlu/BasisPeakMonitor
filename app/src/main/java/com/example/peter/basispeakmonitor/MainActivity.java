@@ -64,6 +64,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
         mainList.setAdapter(adapter);
 
         if(getIntent()!=null){
+            System.out.println("Intent found");
             Intent incoming = getIntent();
             if(incoming.hasCategory("patient")){
                 Patient p = gson.fromJson(incoming.getStringExtra("patient"), Patient.class);
@@ -82,17 +83,23 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
     @Override
     protected void onPause() {
         super.onPause();
-        SharedPreferences.Editor prefsEditor = mPrefs.edit();
+        if(mPrefs!=null) {
+            SharedPreferences.Editor prefsEditor = mPrefs.edit();
 
-        prefsEditor.putString("patient-list", gson.toJson(patientList));
+            prefsEditor.putString("patient-list", gson.toJson(patientList));
 
-        prefsEditor.apply();
+            prefsEditor.apply();
+        }
     }
 
 
     private void initializeDisplayedData(){
-        if(mPrefs.contains("patient-list")){
+
+        mainList = (ListView) findViewById(R.id.hubListView);
+        if(mPrefs!=null){
             patientList = gson.fromJson(mPrefs.getString("patient-list", ""), ArrayList.class);
+        } else {
+            patientList = new ArrayList<>();
         }
         patientNames = new ArrayList<>();
         for(int i = 0; i<patientList.size();  i++){
@@ -111,5 +118,8 @@ public class MainActivity extends Activity implements AdapterView.OnItemClickLis
 
         startActivity(intent);
     }
-
+    public void addPatient(View view){
+        Intent intent = new Intent(this, AddPatient.class);
+        startActivity(intent);
+    }
 }

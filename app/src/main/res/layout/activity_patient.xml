@@ -14,7 +14,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/metricList"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/patientName" />
+        android:layout_below="@+id/patientName"
+        android:layout_above="@+id/reload" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -24,4 +25,13 @@
         android:id="@+id/patientName"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Refresh"
+        android:id="@+id/reload"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/patientName"
+        android:layout_alignEnd="@+id/patientName" />
 </RelativeLayout>
